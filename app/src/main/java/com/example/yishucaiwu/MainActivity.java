@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         psw_text = (EditText) findViewById(R.id.psw_text);
         sendBtn = (Button) findViewById(R.id.send);
@@ -68,6 +74,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "sorry,wrong psw!", Toast.LENGTH_SHORT).show();
                 }
         }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.toolbar,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.settings:
+            //    Toast.makeText(this,"You clicked Share",Toast.LENGTH_SHORT).show();
+                AndroidShare androidShare = new AndroidShare(this);
+                String strContent = mainText.getText().toString();
+                androidShare.shareWeChatFriend("伊淑工作安排",strContent,0,null);
+                break;
+            default:
+        }
+        return true;
     }
 
     public boolean isPswSaved() {
