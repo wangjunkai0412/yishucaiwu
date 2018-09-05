@@ -2,6 +2,7 @@ package com.example.yishucaiwu;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText psw_text;
     private Button sendBtn;
     private TextView mainText;
+    private SwipeRefreshLayout swipeRefresh;
 
     final String PSW = "dotadota";
     final String URL = "http://www.yishucaiwu.com/yishu_work.json";
@@ -52,6 +54,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //显示正文内容
             sendRequestWithOkHttp();
         }
+
+        swipeRefresh = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshMainText();
+            }
+        });
+    }
+
+    private void refreshMainText()
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    Thread.sleep(2000);
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //显示正文内容
+                        sendRequestWithOkHttp();
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
+        }).start();
     }
 
     @Override
